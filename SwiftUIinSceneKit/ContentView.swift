@@ -10,14 +10,8 @@ import SwiftUI
 import SceneKit
 import Combine
 
-final class CameraInfo: BindableObject  {
-    let didChange = PassthroughSubject<CameraInfo, Never>()
-    
-    var cameraNumber:UInt = 0 {
-        didSet {
-            didChange.send(self)
-        }
-    }
+final class CameraInfo: ObservableObject  {
+    @Published var cameraNumber:UInt = 0
 }
 
 struct ContentView : View {
@@ -25,19 +19,19 @@ struct ContentView : View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            
+
             // SceneKit
             SceneView(cameraNumber: $cameraInfo.cameraNumber)
                 .frame(height: 300)
             
             // TableView
-            List(0...2){ i in
+            List(0...2, id:\.self){ (i) in
                 Button(action: {
                     self.cameraInfo.cameraNumber = UInt(i)
                 }) {
                     TableRow(number: i)
                 }
-                
+
             }
 
         }
